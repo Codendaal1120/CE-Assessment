@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using CE.Assessment.Application;
+using CE.Assessment.Infrastructure;
 
 namespace CE.Assessment.Web;
 
@@ -10,10 +11,10 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
 
-
         builder.Services.AddLogging(config);
         builder.Services.AddControllersWithViews();
         builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices(config);
 
         var app = builder.Build();
 

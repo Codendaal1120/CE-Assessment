@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{4D1AB02F-8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Application", "Core\CE.Assessment.Application\CE.Assessment.Application.csproj", "{524BBE23-5D43-4AAC-8410-0F8632998613}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Infrastructure", "Core\CE.Assessment.Infrastructure\CE.Assessment.Infrastructure.csproj", "{C5478253-D838-4EEB-AF14-CB8965032842}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{524BBE23-5D43-4AAC-8410-0F8632998613}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{524BBE23-5D43-4AAC-8410-0F8632998613}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{524BBE23-5D43-4AAC-8410-0F8632998613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5478253-D838-4EEB-AF14-CB8965032842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5478253-D838-4EEB-AF14-CB8965032842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5478253-D838-4EEB-AF14-CB8965032842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5478253-D838-4EEB-AF14-CB8965032842}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{524BBE23-5D43-4AAC-8410-0F8632998613} = {4D1AB02F-8E0A-457B-9790-39CE63EB0DB7}
+		{C5478253-D838-4EEB-AF14-CB8965032842} = {4D1AB02F-8E0A-457B-9790-39CE63EB0DB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C546F89-A035-4B47-8E46-55EAF576CEA6}
