@@ -15,7 +15,6 @@ public static class StartupExtensions
         return services;
     }
 
-
     public static IServiceCollection AddLogging(this IServiceCollection services, IConfiguration config)
     {
         var loggerConfiguration = new LoggerConfiguration()

@@ -18,7 +18,7 @@ namespace CE.Assessment.Web.Controllers
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
-            await _orderService.GetTop5Orders(ct);
+            await _orderService.GetTopNOrders(5, ct);
             return View();
         }
 
