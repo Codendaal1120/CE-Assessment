@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		.github\workflows\unit-tests.yml = .github\workflows\unit-tests.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Console", "CE.Assessment.Console\CE.Assessment.Console.csproj", "{B85A6744-724B-486B-A82C-36AE49102559}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{E3070CB4-C074-46C3-BBDC-BFAD71FF9D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3070CB4-C074-46C3-BBDC-BFAD71FF9D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3070CB4-C074-46C3-BBDC-BFAD71FF9D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B85A6744-724B-486B-A82C-36AE49102559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B85A6744-724B-486B-A82C-36AE49102559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B85A6744-724B-486B-A82C-36AE49102559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B85A6744-724B-486B-A82C-36AE49102559}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

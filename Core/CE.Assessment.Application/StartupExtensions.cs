@@ -14,6 +14,7 @@ public static class StartupExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<OrderService>();
+        services.AddTransient<ProductsService>();
 
         return services;
     }
