@@ -1,8 +1,65 @@
-﻿@{
+﻿@model CE.Assessment.Web.Models.HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
+@await Component.InvokeAsync("NToastNotify")
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="text-center">
+        <h2 class="display-4 error">Error</h2>
+        <p class="error">@Model.ErrorMessage</p>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Top 5 products sold</h1>
+
+        <table id="products">
+            <thead>
+                <tr>
+                    <th>Product no</th>
+                    <th>Gtin</th>
+                    <th>Qty</th>
+                    <th>Update stock (to 25)</th>
+                </tr>
+            </thead>
+            <tbody>
+             @*    @using (Html.BeginForm("Update", "Home", FormMethod.Post, new { id = "update" }))
+                {
+                    foreach (var r in Model.Records)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => r.ProductNo)</td>
+                            <td>@Html.DisplayFor(modelItem => r.Gtin)</td>
+                            <td>@Html.DisplayFor(modelItem => r.Quantity)</td>
+                            <td>
+                                <input type="hidden" name="productNo" value="@r.ProductNo" />
+                                <input class="btn btn-primary btn-xs delBtn" type="submit" name="@r.ProductNo" value="Update" />
+                            </td>
+                        </tr>
+                    }
+                } *@
+                @for (int i = 0; i < Model.Records.Count(); i++)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => Model.Records[i].ProductNo)</td>
+                        <td>@Html.DisplayFor(modelItem => Model.Records[i].Gtin)</td>
+                        <td>@Html.DisplayFor(modelItem => Model.Records[i].Quantity)</td>
+                        <td>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.Hidden("productNo", @Model.Records[i].ProductNo)
+                                //<input type="submit" value="Submit" formaction="SubmitTest" formmethod="post" />
+                                //<input type="hidden" name="productNo" value="@Model.Records[i].ProductNo" />
+                                <input class="btn btn-primary btn-xs delBtn" type="submit" formaction="Update" formmethod="post" value="Update" />
+                            }
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

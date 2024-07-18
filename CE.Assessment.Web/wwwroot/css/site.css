@@ -20,3 +20,35 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.error{
+    color: red;
+}
+
+#products {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#products td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#products tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#products tr:hover {
+    background-color: #ddd;
+}
+
+#products th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    padding-left: 1em;
+    background-color: #134B70;
+    color: white;
+}

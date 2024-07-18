@@ -1,9 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
 using CE.Assessment.Application;
 using CE.Assessment.Infrastructure;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CE.Assessment.Web;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)
@@ -12,7 +13,7 @@ public class Program
         var config = builder.Configuration;
 
         builder.Services.AddLogging(config);
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews().AddNToastNotifyToastr();
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(config);
 
@@ -23,6 +24,8 @@ public class Program
         {
             app.UseExceptionHandler("/Home/Error");
         }
+
+        app.UseNToastNotify();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthorization();
