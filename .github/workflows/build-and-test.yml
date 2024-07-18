@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test ChannelEngineAssessment.sln --no-build --verbosity normal --results-directory ../TestResults -p:CollectCoverage=true -p:CoverletOutput=../TestResults/coverage.xml -p:MergeWith=../TestResults/coverlet.json  -p:CoverletOutputFormat=cobertura -maxcpucount:1
+      run: dotnet test CE.Assessment.sln --no-build --verbosity normal --results-directory ../TestResults -p:CollectCoverage=true -p:CoverletOutput=../TestResults/coverage.xml -p:MergeWith=../TestResults/coverlet.json  -p:CoverletOutputFormat=cobertura -maxcpucount:1
     - name: Store code coverage file
       uses: actions/upload-artifact@v3
       with:
