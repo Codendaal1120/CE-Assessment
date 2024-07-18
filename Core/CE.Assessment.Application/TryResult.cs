@@ -1,12 +1,26 @@
 ﻿namespace CE.Assessment.Application;
 
-public class TryResult<T>
+public class TryResult
 {
     public bool Success { get; set; }
     public string? Error { get; set; }
+
+    public static TryResult Fail(string error)
+    {
+        return new TryResult { Success = false, Error = error };
+    }
+
+    public static TryResult Succeed()
+    {
+        return new TryResult { Success = true };
+    }
+}
+
+public class TryResult<T> : TryResult
+{
     public T? Value { get; set; }
 
-    public static TryResult<T> Fail(string error)
+    public static new TryResult<T> Fail(string error)
     {
         return new TryResult<T> { Success = false, Error = error };
     }

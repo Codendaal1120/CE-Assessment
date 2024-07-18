@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.HttpLogging;
+﻿using CE.Assessment.Application.Services;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;

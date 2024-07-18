@@ -1,15 +1,15 @@
+using CE.Assessment.Application.Services;
 using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
 using CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
-using Refit;
 using Serilog;
 using System.Net;
 
 namespace CE.Assessment.Application.Test;
 
-public class OrderServiceTests
+public class OrderServiceTests : TestBase
 {
     [SetUp]
     public void Setup()
@@ -20,7 +20,7 @@ public class OrderServiceTests
     public async Task GetTopNOrders_Handles_HttpError()
     {
         // Arrange
-        var apiResponse = await CreateApiResponse<ChannelResponse<MerchantOrderResponse>>(null, HttpStatusCode.InternalServerError);
+        var apiResponse = await CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.InternalServerError);
 
         var client = Substitute.For<IChannelEngineClient>();
         client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
@@ -38,7 +38,7 @@ public class OrderServiceTests
     public async Task GetTopNOrders_Handles_ApiError()
     {
         // Arrange
-        var apiResponse = await CreateApiResponse(new ChannelResponse<MerchantOrderResponse>() { Message = "Tests error", ItemsPerPage = 10, StatusCode = 400, Success = false });
+        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>() { Message = "Tests error", ItemsPerPage = 10, StatusCode = 400, Success = false });
 
         var client = Substitute.For<IChannelEngineClient>();
         client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
@@ -56,7 +56,7 @@ public class OrderServiceTests
     public async Task GetTopNOrders_Handles_NullRespoonse()
     {
         // Arrange
-        var apiResponse = await CreateApiResponse<ChannelResponse<MerchantOrderResponse>>(null, HttpStatusCode.OK);
+        var apiResponse = await CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.OK);
 
         var client = Substitute.For<IChannelEngineClient>();
         client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
@@ -74,7 +74,7 @@ public class OrderServiceTests
     public async Task GetTopNOrders_Handles_EmptyRespoonse()
     {
         // Arrange
-        var apiResponse = await CreateApiResponse(new ChannelResponse<MerchantOrderResponse>() 
+        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>() 
         { 
             Count = 1, 
             TotalCount = 1,
@@ -139,7 +139,7 @@ public class OrderServiceTests
             }),
         };
 
-        var apiResponse = await CreateApiResponse(new ChannelResponse<MerchantOrderResponse>()
+        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
         {
             Count = 1,
             TotalCount = 1,
@@ -184,28 +184,6 @@ public class OrderServiceTests
         };
     }
 
-    //private MerchantOrderLineResponse CreateLineItem(int id, int quantity, string description, string productNo)
-    //{
-    //    return new MerchantOrderLineResponse()
-    //    {
-    //        Id = id,
-    //        Description = description,
-    //        CancellationRequestedQuantity = 1,
-    //        ChannelProductNo = productNo,
-    //        Condition = Condition.NEW,
-    //        FeeFixed = 0,
-    //        FeeRate = 0,
-    //        IsFulfillmentByMarketplace = false,
-    //        OriginalFeeFixed = 0,
-    //        Quantity = quantity,
-    //        Status = 0,
-    //        StockLocation = new MerchantStockLocationResponse() { Id = 1, Name = "Test location" },
-    //        UnitPriceInclVat = 0,
-    //        VatRate = 0
-    //    };
-    //}
-
-
     private MerchantOrderResponse CreateOrderResponse(int id, IReadOnlyCollection<MerchantOrderLineResponse> lines)
     {
         var address = new MerchantAddressResponse()
@@ -245,18 +223,5 @@ public class OrderServiceTests
         return new OrderService(new NullLogger<OrderService>(), client);
     }
 
-    private async Task<ApiResponse<T>> CreateApiResponse<T>(T? content, HttpStatusCode? code = null)
-    {
-        code ??= content == null ? HttpStatusCode.NotFound : HttpStatusCode.OK;
-
-        var resp = new HttpResponseMessage(code.Value);
-        ApiException? ex = null;
-
-        if (code != HttpStatusCode.OK)
-        {
-            ex = await ApiException.Create(new HttpRequestMessage(), HttpMethod.Get, resp, new RefitSettings());
-        }
-
-        return new ApiResponse<T>(resp, content, new RefitSettings(), ex);
-    }
+    
 }

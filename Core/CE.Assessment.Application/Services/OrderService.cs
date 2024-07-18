@@ -3,7 +3,7 @@ using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
 using CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 using Microsoft.Extensions.Logging;
 
-namespace CE.Assessment.Application;
+namespace CE.Assessment.Application.Services;
 
 public class OrderService
 {

@@ -1,11 +1,8 @@
 ﻿namespace CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 
-public sealed class ChannelResponse<T>
-{  
-    public IReadOnlyCollection<T>? Content { get; init; }
-    public int Count { get; init; }
-    public int TotalCount { get; init; }
-    public required int ItemsPerPage { get; init; }
+public class ChannelResponse<T>
+{
+    public T? Content { get; init; }
     public required int StatusCode { get; init; }
     public string? RequestId { get; init; }
     public string? LogId { get; init; }
