@@ -33,6 +33,75 @@ public class OrderServiceTests
         Assert.That(!orders.Success);
     }
 
+    [Test, Description("Test that the 'GetTopNOrders' handles api failures")]
+    public async Task GetTopNOrders_Handles_ApiError()
+    {
+        // Arrange
+        var apiResponse = await CreateApiResponse(new ChannelResponse<MerchantOrderResponse>() { Message = "Tests error", ItemsPerPage = 10, StatusCode = 400, Success = false });
+
+        var client = Substitute.For<IChannelEngineClient>();
+        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+
+        var os = CreateOrderService(client);
+
+        // Act
+        var orders = await os.GetTopNOrders(5, CancellationToken.None);
+
+        // Assert
+        Assert.That(!orders.Success);
+    }
+
+    [Test, Description("Test that the 'GetTopNOrders' handles a null response")]
+    public async Task GetTopNOrders_Handles_NullRespoonse()
+    {
+        // Arrange
+        var apiResponse = await CreateApiResponse<ChannelResponse<MerchantOrderResponse>>(null, HttpStatusCode.OK);
+
+        var client = Substitute.For<IChannelEngineClient>();
+        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+
+        var os = CreateOrderService(client);
+
+        // Act
+        var orders = await os.GetTopNOrders(5, CancellationToken.None);
+
+        // Assert
+        Assert.That(!orders.Success);
+    }
+
+
+    [Test, Description("Test that the 'GetTopNOrders' handles an empty response")]
+    public async Task GetTopNOrders_Handles_EmptyRespoonse()
+    {
+        // Arrange
+        var apiResponse = await CreateApiResponse(new ChannelResponse<MerchantOrderResponse>() 
+        { 
+            Count = 1, 
+            TotalCount = 1,
+            ItemsPerPage = 10, 
+            StatusCode = 200, 
+            Success = true ,
+            Content = Array.Empty<MerchantOrderResponse>()
+        });
+
+        var client = Substitute.For<IChannelEngineClient>();
+        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+
+        var os = CreateOrderService(client);
+
+        // Act
+        var orders = await os.GetTopNOrders(5, CancellationToken.None);
+
+        // Assert
+        Assert.That(orders.Success);
+    }
+
+    private MerchantOrderResponse CreateOrderResponse()
+    {
+        var oder = Substitute.For<MerchantOrderResponse>();
+        return oder;
+    }
+
     private OrderService CreateOrderService(IChannelEngineClient? client = null)
     {
         client ??= Substitute.For<IChannelEngineClient>();
