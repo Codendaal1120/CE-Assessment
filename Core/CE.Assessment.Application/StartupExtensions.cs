@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CE.Assessment.Application;
 
+[ExcludeFromCodeCoverage]
 public static class StartupExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)

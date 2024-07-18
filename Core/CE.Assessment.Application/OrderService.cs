@@ -54,7 +54,7 @@ public class OrderService
         var rankedOrders = orderResponse.Content.Content
             .Where(o => o.Lines != null)
             .SelectMany(o => o.Lines!)
-            .GroupBy(l => new { l.Gtin, l.MerchantProductNo, l.Description, l.Quantity })
+            .GroupBy(l => new { l.Gtin, l.MerchantProductNo, l.Description })
             .Select(g => new ProductSalesRecord() { Description = g.Key.Description, Gtin = g.Key.Gtin, ProductNo = g.Key.MerchantProductNo, Quantity = g.Sum(s => s.Quantity) })
             .OrderByDescending(x => x.Quantity)
             .Take(orderCount);

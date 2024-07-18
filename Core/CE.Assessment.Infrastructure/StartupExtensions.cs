@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CE.Assessment.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 public static class StartupExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
