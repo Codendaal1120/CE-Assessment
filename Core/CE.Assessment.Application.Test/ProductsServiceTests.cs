@@ -115,6 +115,33 @@ public class ProductsServiceTests : TestBase
         Assert.That(!updateResult.Success);
     }
 
+    [Test, Description("Test that the 'UpdateProduct' handles an validation errors")]
+    public async Task UpdateProduct_Handles_ValidationErrors()
+    {
+        // Arrange
+        var apiResponse = await CreateApiResponse(new ChannelResponse<ProductCreationResult>()
+        {
+            StatusCode = 200,
+            Success = true,
+            Content = null,
+            ValidationErrors = new Dictionary<string, IReadOnlyCollection<object>> {
+                { "error1", new List<string> { "error-1.1", "error-1.2" } },
+                { "error2", new List<string> { "error-2.1", "error-2.2" } }
+            }
+        });
+
+        var client = Substitute.For<IChannelEngineClient>();
+        client.UpdateProduct(Arg.Any<PatchMerchantProductDto>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+
+        var ps = CreateProductsService(client);
+
+        // Act
+        var updateResult = await ps.UpdateProductStock("1", 5, CancellationToken.None);
+
+        // Assert
+        Assert.That(!updateResult.Success);
+    }
+
     [Test, Description("Test that the 'UpdateProduct' correctly updates product")]
     public async Task UpdateProduct_Returns_results()
     {

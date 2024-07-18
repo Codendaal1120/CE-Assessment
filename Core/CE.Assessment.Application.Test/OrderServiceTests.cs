@@ -70,6 +70,36 @@ public class OrderServiceTests : TestBase
         Assert.That(!orders.Success);
     }
 
+    [Test, Description("Test that the 'GetTopNOrders' handles an validation errors")]
+    public async Task GetTopNOrders_Handles_ValidationErrors()
+    {
+        // Arrange
+        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
+        {
+            Count = 1,
+            TotalCount = 1,
+            ItemsPerPage = 10,
+            StatusCode = 200,
+            Success = true,
+            Content = null,
+            ValidationErrors = new Dictionary<string, IReadOnlyCollection<object>> {
+                { "error1", new List<string> { "error-1.1", "error-1.2" } },
+                { "error2", new List<string> { "error-2.1", "error-2.2" } }
+            }
+        });
+
+        var client = Substitute.For<IChannelEngineClient>();
+        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+
+        var os = CreateOrderService(client);
+
+        // Act
+        var orders = await os.GetTopNOrders(5, CancellationToken.None);
+
+        // Assert
+        Assert.That(!orders.Success);
+    }
+
     [Test, Description("Test that the 'GetTopNOrders' handles an empty response")]
     public async Task GetTopNOrders_Handles_EmptyRespoonse()
     {

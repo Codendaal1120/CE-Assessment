@@ -1,4 +1,5 @@
-﻿using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
+﻿using CE.Assessment.Application.Model;
+using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
 using CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ public class ProductsService
         _logger = logger;
     }
 
+    [Obsolete("Does not work to update stock, use <see cref=\"OffersService\"/> ")]
     public async Task<TryResult> UpdateProductStock(string merchantProductNo, int stock, CancellationToken ct)
     {
         var update = new PatchMerchantProductDto()
@@ -33,6 +35,14 @@ public class ProductsService
         {
             _logger.LogError($"Could not update the product, the http call failed with: {result.Error}");
             return TryResult.Fail($"Http call failed with: {result.Error}");
+        }
+
+        // check validation errors
+        if (result.Content?.ValidationErrors != null && result.Content.ValidationErrors.Any())
+        {
+            var error = result.Content.ValidationErrors.AsString();
+            _logger.LogError($"Could not update the product, the api returned validation errors: {error}");
+            return TryResult.Fail($"Api returned validation errors: {error}");
         }
 
         // check api response

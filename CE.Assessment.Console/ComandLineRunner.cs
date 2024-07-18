@@ -10,15 +10,15 @@ namespace CE.Assessment;
 internal class ComandLineRunner
 {
     private OrderService _orderService;
-    private ProductsService _productsService;
+    private OffersService _offerService;
     private ILogger _logger;
 
     private const int TableWidth = 70;
 
-    public ComandLineRunner(ILogger<ComandLineRunner> logger, OrderService orderService, ProductsService productsService)
+    public ComandLineRunner(ILogger<ComandLineRunner> logger, OrderService orderService, OffersService offersService)
     {
         _orderService = orderService;
-        _productsService = productsService;
+        _offerService = offersService;
         _logger = logger;
     }
 
@@ -41,7 +41,7 @@ internal class ComandLineRunner
     {
         _logger.LogInformation($"Setting {options.Product}'s stock to {options.Quantity}");
 
-        var response = await _productsService.UpdateProductStock(options.Product, options.Quantity, CancellationToken.None);
+        var response = await _offerService.UpdateProductStock(options.Product, options.Quantity, CancellationToken.None);
         if (!response.Success)
         {
             _logger.LogError(response.Error);

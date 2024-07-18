@@ -16,6 +16,7 @@ public static class StartupExtensions
     {
         services.AddTransient<OrderService>();
         services.AddTransient<ProductsService>();
+        services.AddTransient<OffersService>();
 
         return services;
     }

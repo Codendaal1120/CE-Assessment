@@ -13,4 +13,7 @@ public interface IChannelEngineClient
 
     [Patch("/v2/products")]
     Task<IApiResponse<ChannelResponse<ProductCreationResult>>> UpdateProduct(PatchMerchantProductDto update, CancellationToken ct);
+
+    [Put("/v2/offer/stock")]
+    Task<IApiResponse<ChannelResponse<Dictionary<string, List<string>>>>> UpdateProductStock(IReadOnlyCollection<MerchantOfferStockUpdateRequest> updates, CancellationToken ct);
 }

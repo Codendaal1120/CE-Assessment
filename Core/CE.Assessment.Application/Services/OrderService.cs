@@ -28,21 +28,29 @@ public class OrderService
         // check the http call
         if (!orderResponse.IsSuccessStatusCode)
         {
-            _logger.LogError($"Could not get top 5 sold products, the http call failed with: {orderResponse.Error}");
+            _logger.LogError($"Could not get top sold products, the http call failed with: {orderResponse.Error}");
             return TryResult<IEnumerable<ProductSalesRecord>>.Fail($"Http call failed with: {orderResponse.Error}");
+        }
+
+        // check validation errors
+        if (orderResponse.Content?.ValidationErrors != null && orderResponse.Content.ValidationErrors.Any())
+        {
+            var error = orderResponse.Content.ValidationErrors.AsString();
+            _logger.LogError($"Could not get top sold products, the api returned validation errors: {error}");
+            return TryResult<IEnumerable<ProductSalesRecord>>.Fail($"Api returned validation errors: {error}");
         }
 
         // check api response
         if (orderResponse.Content?.Content == null)
         {
-            _logger.LogError("Could not get top 5 sold products, the api returned an empty response");
+            _logger.LogError("Could not get top sold products, the api returned an empty response");
             return TryResult<IEnumerable<ProductSalesRecord>>.Fail("Could not get top 5 sold products, the api returned an empty response");
         }
 
         if (!orderResponse.Content.Success)
         {
             // check api response
-            _logger.LogError($"Could not get top 5 sold products, the api returned an error: {orderResponse.Content.Message}");
+            _logger.LogError($"Could not get top sold products, the api returned an error: {orderResponse.Content.Message}");
             return TryResult<IEnumerable<ProductSalesRecord>>.Fail($"Api returned an error: {orderResponse.Content.Message}");
         }
 
