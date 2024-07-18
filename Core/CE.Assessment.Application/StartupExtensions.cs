@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CE.Assessment.Application;
@@ -25,7 +26,7 @@ public static class StartupExtensions
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             //.ReadFrom.Configuration(config)
             .Enrich.FromLogContext()
-            .WriteTo.Console().
+            .WriteTo.Console(theme: AnsiConsoleTheme.Code).
             CreateBootstrapLogger();
 
         services.AddSerilog((services, lc) => lc

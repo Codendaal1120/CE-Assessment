@@ -6,5 +6,5 @@ namespace CE.Assessment.Options;
 internal class GetTopNoptions
 {
     [Option('c', "count", Required = true, HelpText = "The number of products to list")]
-    public int Count { get; set; }
+    public int Count { get; init; }
 }

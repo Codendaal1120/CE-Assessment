@@ -3,7 +3,7 @@ using CE.Assessment.Application.Services;
 using CE.Assessment.Application;
 using CE.Assessment.Options;
 using CommandLine;
-using System.Data.Common;
+using Microsoft.Extensions.Logging;
 
 namespace CE.Assessment;
 
@@ -11,16 +11,18 @@ internal class ComandLineRunner
 {
     private OrderService _orderService;
     private ProductsService _productsService;
+    private ILogger _logger;
 
     private const int TableWidth = 70;
 
-    public ComandLineRunner(OrderService orderService, ProductsService productsService)
+    public ComandLineRunner(ILogger<ComandLineRunner> logger, OrderService orderService, ProductsService productsService)
     {
         _orderService = orderService;
         _productsService = productsService;
+        _logger = logger;
     }
 
-    public async Task Run(string? arguments)
+    public void Run(string? arguments)
     {
         var args = arguments?.Split();
 
@@ -37,18 +39,30 @@ internal class ComandLineRunner
 
     private async Task RunUpdateCommand(UpdateProductOptions options)
     {
+        _logger.LogInformation($"Setting {options.Product}'s stock to {options.Quantity}");
 
+        var response = await _productsService.UpdateProductStock(options.Product, options.Quantity, CancellationToken.None);
+        if (!response.Success)
+        {
+            _logger.LogError(response.Error);
+            return;
+        }
+
+        _logger.LogInformation($"{options.Product}'s stock updated to {options.Quantity}");
     }
 
     private async Task RunGetTopProducts(GetTopNoptions options)
     {
+        _logger.LogInformation($"Getting top {options.Count} products sold\n");
+
         var response = await _orderService.GetTopNOrders(options.Count, CancellationToken.None);
         if (!response.Try(out var topNorders, out var error))
         {
-            Console.Error.WriteLine(error);
+            _logger.LogError(error);
+            return;
         }
 
-        Console.WriteLine($"Top {options.Count} products sold\n");
+        _logger.LogInformation($"Top {options.Count} products sold\n");
 
         PrintHeader();
         foreach (var record in topNorders!)

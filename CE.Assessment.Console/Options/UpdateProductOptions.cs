@@ -6,5 +6,8 @@ namespace CE.Assessment.Options;
 internal class UpdateProductOptions
 {
     [Option('q', "quantity", Required = true, HelpText = "Updates the given product stock")]
-    public int Quantity { get; set; }
+    public int Quantity { get; init; }
+
+    [Option('p', "product", Required = true, HelpText = "The merchant product number")]
+    public required string Product { get; init; }
 }
