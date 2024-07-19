@@ -25,5 +25,12 @@ I created a very simple ASP.NET MVC site to show the top products sold with a bu
 
 From my Initial look at the api spec, it seemed like I needed to calls "v2/orders/" to fetch the orders and "v2/Products" to update the product stock. After building the OrdersService and ProductsService, along with the unit tests I found that the stock does in fact not update via the PATCH endpoint. I then implemented the OffersService to call "v2/Offers", which does allow for stock updates. Since I already built and tested the ProductsService, I decided just to keep it in, marking it as obsolete. 
 
+For the API calls I use Refit, because its criminally simple to implement and the models were generated from the spec using a third party tool.
+
 ### Running
 To run, you need to add the API key to the appsettings.json or user secrets in VS.
+
+# Improvements
+_As with all things develop, there is always room for improvement._
+
+If I would have developed this further I would refactor the models and remove all the fluff from the generated code, as well as abstract these into interfaces and make them internal. I always prefer to return immutable objects. Secondly I would refactor the services as there is some code prepetition which could be abstracted and a bit more generic.
