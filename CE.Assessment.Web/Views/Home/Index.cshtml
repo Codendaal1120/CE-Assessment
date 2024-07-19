@@ -21,41 +21,25 @@ else
                 <tr>
                     <th>Product no</th>
                     <th>Gtin</th>
+                    <th>Description</th>
                     <th>Qty</th>
                     <th>Update stock (to 25)</th>
                 </tr>
             </thead>
             <tbody>
-             @*    @using (Html.BeginForm("Update", "Home", FormMethod.Post, new { id = "update" }))
-                {
-                    foreach (var r in Model.Records)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => r.ProductNo)</td>
-                            <td>@Html.DisplayFor(modelItem => r.Gtin)</td>
-                            <td>@Html.DisplayFor(modelItem => r.Quantity)</td>
-                            <td>
-                                <input type="hidden" name="productNo" value="@r.ProductNo" />
-                                <input class="btn btn-primary btn-xs delBtn" type="submit" name="@r.ProductNo" value="Update" />
-                            </td>
-                        </tr>
-                    }
-                } *@
                 @for (int i = 0; i < Model.Records.Count(); i++)
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => Model.Records[i].ProductNo)</td>
                         <td>@Html.DisplayFor(modelItem => Model.Records[i].Gtin)</td>
+                        <td>@Html.DisplayFor(modelItem => Model.Records[i].Description)</td>
                         <td>@Html.DisplayFor(modelItem => Model.Records[i].Quantity)</td>
                         <td>
                             @using (Html.BeginForm())
                             {
                                 @Html.Hidden("productNo", @Model.Records[i].ProductNo)
-                                //<input type="submit" value="Submit" formaction="SubmitTest" formmethod="post" />
-                                //<input type="hidden" name="productNo" value="@Model.Records[i].ProductNo" />
                                 <input class="btn btn-primary btn-xs delBtn" type="submit" formaction="Update" formmethod="post" value="Update" />
-                            }
-                            
+                            }                            
                         </td>
                     </tr>
                 }

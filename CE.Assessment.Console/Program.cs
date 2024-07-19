@@ -14,8 +14,9 @@ internal class Program
 
         while (true)
         {
-            Console.WriteLine("Enter command or type help for help information");
+            Console.WriteLine("--> Enter command or type help for help information");
             serviceProvider.GetRequiredService<ComandLineRunner>().Run(Console.ReadLine());
+         
         }
     }
 

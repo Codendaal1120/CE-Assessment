@@ -7,19 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CE.Assessment.Web", "CE.Ass
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{4D1AB02F-8E0A-457B-9790-39CE63EB0DB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Application", "Core\CE.Assessment.Application\CE.Assessment.Application.csproj", "{524BBE23-5D43-4AAC-8410-0F8632998613}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CE.Assessment.Application", "Core\CE.Assessment.Application\CE.Assessment.Application.csproj", "{524BBE23-5D43-4AAC-8410-0F8632998613}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Infrastructure", "Core\CE.Assessment.Infrastructure\CE.Assessment.Infrastructure.csproj", "{C5478253-D838-4EEB-AF14-CB8965032842}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CE.Assessment.Infrastructure", "Core\CE.Assessment.Infrastructure\CE.Assessment.Infrastructure.csproj", "{C5478253-D838-4EEB-AF14-CB8965032842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Application.Test", "Core\CE.Assessment.Application.Test\CE.Assessment.Application.Test.csproj", "{E3070CB4-C074-46C3-BBDC-BFAD71FF9D5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CE.Assessment.Application.Test", "Core\CE.Assessment.Application.Test\CE.Assessment.Application.Test.csproj", "{E3070CB4-C074-46C3-BBDC-BFAD71FF9D5C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{962855F0-FAC3-4F1A-822E-74ED2F18DEC8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+		README.md = README.md
 		.github\workflows\unit-tests.yml = .github\workflows\unit-tests.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CE.Assessment.Console", "CE.Assessment.Console\CE.Assessment.Console.csproj", "{B85A6744-724B-486B-A82C-36AE49102559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CE.Assessment.Console", "CE.Assessment.Console\CE.Assessment.Console.csproj", "{B85A6744-724B-486B-A82C-36AE49102559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

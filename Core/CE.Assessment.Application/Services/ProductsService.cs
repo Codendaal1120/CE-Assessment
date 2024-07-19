@@ -1,5 +1,4 @@
-﻿using CE.Assessment.Application.Model;
-using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
+﻿using CE.Assessment.Infrastructure.WebClients.ChannelEngine;
 using CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 using Microsoft.Extensions.Logging;
 

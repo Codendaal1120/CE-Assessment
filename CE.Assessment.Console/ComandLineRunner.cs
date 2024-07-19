@@ -74,11 +74,12 @@ internal class ComandLineRunner
 
     private void PrintHeader()
     {
-        var width = TableWidth / 3;
+        var width = TableWidth / 4;
         string row = "|";
 
         row += CentreText(nameof(ProductSalesRecord.ProductNo), width) + "|";
         row += CentreText(nameof(ProductSalesRecord.Gtin), width) + "|";
+        row += CentreText(nameof(ProductSalesRecord.Description), width) + "|";
         row += CentreText(nameof(ProductSalesRecord.Quantity), width) + "|";
 
         Console.WriteLine("|" + new string('-', TableWidth + 1) + "|");
@@ -93,11 +94,12 @@ internal class ComandLineRunner
 
     private void PrintOrder(ProductSalesRecord record)
     {
-        var width = TableWidth / 3;
+        var width = TableWidth / 4;
         string row = "|";
 
         row += CentreText(record.ProductNo ?? string.Empty, width) + "|";
         row += CentreText(record.Gtin ?? string.Empty, width) + "|";
+        row += CentreText(record.Description ?? string.Empty, width) + "|";
         row += CentreText(record.Quantity.ToString(), width) + "|";
 
         Console.WriteLine(row);
