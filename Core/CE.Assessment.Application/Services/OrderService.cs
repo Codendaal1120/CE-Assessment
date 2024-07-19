@@ -18,7 +18,7 @@ public class OrderService
 
     /// <summary>
     /// The assement requirement. 
-    /// Gets a list of the top 5 products sold (product name, GTIN and total quantity), 
+    /// Gets a list of the top n products sold (product name, GTIN and total quantity), 
     /// ordered by the total quantity sold in descending order
     /// </summary>
     public async Task<TryResult<IEnumerable<ProductSalesRecord>>> GetTopNOrders(int orderCount, CancellationToken ct)
@@ -47,9 +47,9 @@ public class OrderService
             return TryResult<IEnumerable<ProductSalesRecord>>.Fail("Could not get top 5 sold products, the api returned an empty response");
         }
 
+        // check api response
         if (!orderResponse.Content.Success)
-        {
-            // check api response
+        {            
             _logger.LogError($"Could not get top sold products, the api returned an error: {orderResponse.Content.Message}");
             return TryResult<IEnumerable<ProductSalesRecord>>.Fail($"Api returned an error: {orderResponse.Content.Message}");
         }

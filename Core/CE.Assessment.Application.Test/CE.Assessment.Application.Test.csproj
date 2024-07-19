@@ -29,4 +29,8 @@
     <ProjectReference Include="..\CE.Assessment.Application\CE.Assessment.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Order\" />
+  </ItemGroup>
+
 </Project>

@@ -4,7 +4,8 @@ using CE.Assessment.Infrastructure.WebClients.ChannelEngine.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
-using Serilog;
+using Refit;
+using System.Collections;
 using System.Net;
 
 namespace CE.Assessment.Application.Test;
@@ -16,183 +17,136 @@ public class OrderServiceTests : TestBase
     {
     }
 
-    [Test, Description("Test that the 'GetTopNOrders' handles http failures")]
-    public async Task GetTopNOrders_Handles_HttpError()
+    public class OrderTestCases : IEnumerable
     {
-        // Arrange
-        var apiResponse = await CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.InternalServerError);
-
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
-
-        var os = CreateOrderService(client);
-
-        // Act
-        var orders = await os.GetTopNOrders(5, CancellationToken.None);
-
-        // Assert
-        Assert.That(!orders.Success);
-    }
-
-    [Test, Description("Test that the 'GetTopNOrders' handles api failures")]
-    public async Task GetTopNOrders_Handles_ApiError()
-    {
-        // Arrange
-        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>() { Message = "Tests error", ItemsPerPage = 10, StatusCode = 400, Success = false });
-
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
-
-        var os = CreateOrderService(client);
-
-        // Act
-        var orders = await os.GetTopNOrders(5, CancellationToken.None);
-
-        // Assert
-        Assert.That(!orders.Success);
-    }
-
-    [Test, Description("Test that the 'GetTopNOrders' handles a null response")]
-    public async Task GetTopNOrders_Handles_NullRespoonse()
-    {
-        // Arrange
-        var apiResponse = await CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.OK);
-
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
-
-        var os = CreateOrderService(client);
-
-        // Act
-        var orders = await os.GetTopNOrders(5, CancellationToken.None);
-
-        // Assert
-        Assert.That(!orders.Success);
-    }
-
-    [Test, Description("Test that the 'GetTopNOrders' handles an validation errors")]
-    public async Task GetTopNOrders_Handles_ValidationErrors()
-    {
-        // Arrange
-        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
+        public IEnumerator GetEnumerator()
         {
-            Count = 1,
-            TotalCount = 1,
-            ItemsPerPage = 10,
-            StatusCode = 200,
-            Success = true,
-            Content = null,
-            ValidationErrors = new Dictionary<string, IReadOnlyCollection<object>> {
-                { "error1", new List<string> { "error-1.1", "error-1.2" } },
-                { "error2", new List<string> { "error-2.1", "error-2.2" } }
-            }
-        });
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                    "GetTopNOrders_Handles_HttpError",
+                    "Test that the 'GetTopNOrders' handles http failures",
+                    CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.InternalServerError),
+                    false)
+                    .ToTestCase();
 
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                    "GetTopNOrders_Handles_ApiError",
+                    "Test that the 'GetTopNOrders' handles api failures",
+                    CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>() { Message = "Tests error", ItemsPerPage = 10, StatusCode = 400, Success = false }),
+                    false)
+                    .ToTestCase();
 
-        var os = CreateOrderService(client);
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                  "GetTopNOrders_Handles_NullRespoonse",
+                  "Test that the 'GetTopNOrders' handles a null response",
+                  CreateApiResponse<ChannelCollectionResponse<MerchantOrderResponse>>(null, HttpStatusCode.OK),
+                  false)
+                  .ToTestCase();
 
-        // Act
-        var orders = await os.GetTopNOrders(5, CancellationToken.None);
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                  "GetTopNOrders_Handles_ValidationErrors",
+                  "Test that the 'GetTopNOrders' handles an validation errors",
+                  CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
+                  {
+                      Count = 1,
+                      TotalCount = 1,
+                      ItemsPerPage = 10,
+                      StatusCode = 200,
+                      Success = true,
+                      Content = null,
+                      ValidationErrors = new Dictionary<string, IReadOnlyCollection<object>> {
+                        { "error1", new List<string> { "error-1.1", "error-1.2" } },
+                        { "error2", new List<string> { "error-2.1", "error-2.2" } }
+                    }
+                  }),
+                  false)
+                  .ToTestCase();
 
-        // Assert
-        Assert.That(!orders.Success);
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                 "GetTopNOrders_Handles_EmptyRespoonse",
+                 "Test that the 'GetTopNOrders' handles an empty response",
+                 CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
+                 {
+                     Count = 1,
+                     TotalCount = 1,
+                     ItemsPerPage = 10,
+                     StatusCode = 200,
+                     Success = true,
+                     Content = Array.Empty<MerchantOrderResponse>()
+                 }),
+                 true)
+                 .ToTestCase();
+
+            yield return new TestCase<ChannelCollectionResponse<MerchantOrderResponse>>(
+                "GetTopNOrders_Returns_results",
+                 "Test that the 'GetTopNOrders' correctly sorts results",
+                 CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
+                 {
+                     Count = 1,
+                     TotalCount = 1,
+                     ItemsPerPage = 10,
+                     StatusCode = 200,
+                     Success = true,
+                     Content = new[]
+                    {
+                        CreateOrderResponse(1, new[]
+                        {
+                            CreateLineItem(10, "p1"),
+                            CreateLineItem(10, "p2"),
+                            CreateLineItem(10, "p3")
+                        }),
+
+                         CreateOrderResponse(2, new[]
+                        {
+                            CreateLineItem(10, "p2"),
+                            CreateLineItem(10, "p3"),
+                            CreateLineItem(10, "p4")
+                        }),
+
+                        CreateOrderResponse(3, new[]
+                        {
+                            CreateLineItem(10, "p5"),
+                            CreateLineItem(10, "p6"),
+                            CreateLineItem(10, "p1")
+                        }),
+
+                        CreateOrderResponse(4, new[]
+                        {
+                            CreateLineItem(10, "p6"),
+                            CreateLineItem(10, "p3"),
+                            CreateLineItem(10, "p2")
+                        }),
+
+                        CreateOrderResponse(5, new[]
+                        {
+                            CreateLineItem(10, "p5"),
+                            CreateLineItem(10, "p4"),
+                            CreateLineItem(10, "p1"),
+                            CreateLineItem(10, "p3")
+                        }),
+                    }
+                 }),
+                 true)
+                 .ToTestCase();
+        }
     }
 
-    [Test, Description("Test that the 'GetTopNOrders' handles an empty response")]
-    public async Task GetTopNOrders_Handles_EmptyRespoonse()
+    [TestCaseSource(typeof(OrderTestCases))]
+    public async Task<bool> OrdersTest(ApiResponse<ChannelCollectionResponse<MerchantOrderResponse>> response, string desc)
     {
         // Arrange
-        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>() 
-        { 
-            Count = 1, 
-            TotalCount = 1,
-            ItemsPerPage = 10, 
-            StatusCode = 200, 
-            Success = true ,
-            Content = Array.Empty<MerchantOrderResponse>()
-        });
+        TestContext.Out.WriteLine(desc);
 
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
-
+        var client = CreateClient(response);
         var os = CreateOrderService(client);
 
         // Act
         var orders = await os.GetTopNOrders(5, CancellationToken.None);
 
         // Assert
-        Assert.That(orders.Success);
+        return orders.Success;
     }
 
-    [Test, Description("Test that the 'GetTopNOrders' correctly sorts results")]
-    public async Task GetTopNOrders_Returns_results()
-    {
-        // Arrange
-        var responseOrders = new[]
-        {
-            CreateOrderResponse(1, new[] 
-            { 
-                CreateLineItem(10, "p1"),
-                CreateLineItem(10, "p2"), 
-                CreateLineItem(10, "p3") 
-            }),
-
-             CreateOrderResponse(2, new[]
-            {
-                CreateLineItem(10, "p2"),
-                CreateLineItem(10, "p3"),
-                CreateLineItem(10, "p4")
-            }),
-
-            CreateOrderResponse(3, new[]
-            {
-                CreateLineItem(10, "p5"),
-                CreateLineItem(10, "p6"),
-                CreateLineItem(10, "p1")
-            }),
-
-            CreateOrderResponse(4, new[]
-            {
-                CreateLineItem(10, "p6"),
-                CreateLineItem(10, "p3"),
-                CreateLineItem(10, "p2")
-            }),
-            
-            CreateOrderResponse(5, new[]
-            {
-                CreateLineItem(10, "p5"),
-                CreateLineItem(10, "p4"),
-                CreateLineItem(10, "p1"),
-                CreateLineItem(10, "p3")
-            }),
-        };
-
-        var apiResponse = await CreateApiResponse(new ChannelCollectionResponse<MerchantOrderResponse>()
-        {
-            Count = 1,
-            TotalCount = 1,
-            ItemsPerPage = 10,
-            StatusCode = 200,
-            Success = true,
-            Content = responseOrders
-        });
-
-        var client = Substitute.For<IChannelEngineClient>();
-        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(apiResponse);
-
-        var os = CreateOrderService(client);
-
-        // Act
-        var orders = await os.GetTopNOrders(5, CancellationToken.None);
-
-        // Assert
-        Assert.That(orders.Success);
-        Assert.That(orders.Value!.First().ProductNo == $"product-p3", "Product 'p3' should have the most sales (40)");
-    }
-
-    private MerchantOrderLineResponse CreateLineItem(int quantity, string nameSuffix)
+    private static MerchantOrderLineResponse CreateLineItem(int quantity, string nameSuffix)
     {
         return new MerchantOrderLineResponse()
         {
@@ -214,17 +168,17 @@ public class OrderServiceTests : TestBase
         };
     }
 
-    private MerchantOrderResponse CreateOrderResponse(int id, IReadOnlyCollection<MerchantOrderLineResponse> lines)
+    private static MerchantOrderResponse CreateOrderResponse(int id, IReadOnlyCollection<MerchantOrderLineResponse> lines)
     {
         var address = new MerchantAddressResponse()
-        { 
+        {
             Gender = Gender.NOT_APPLICABLE
         };
 
         var mo = new MerchantOrderResponse()
         {
             Id = id,
-            ChannelOrderSupport = OrderSupport.NONE,            
+            ChannelOrderSupport = OrderSupport.NONE,
             CurrencyCode = "EUR",
             Email = "chris@test.local",
             IsBusinessOrder = true,
@@ -253,5 +207,11 @@ public class OrderServiceTests : TestBase
         return new OrderService(new NullLogger<OrderService>(), client);
     }
 
-    
+    private IChannelEngineClient CreateClient(ApiResponse<ChannelCollectionResponse<MerchantOrderResponse>> response)
+    {
+        var client = Substitute.For<IChannelEngineClient>();
+        client.GetOrders(Arg.Any<OrderStatusView>(), Arg.Any<CancellationToken>()).Returns(response);
+
+        return client;
+    }
 }

@@ -5,7 +5,7 @@ namespace CE.Assessment.Application.Test;
 
 public abstract class TestBase
 {
-    protected async Task<ApiResponse<T>> CreateApiResponse<T>(T? content, HttpStatusCode? code = null)
+    protected static ApiResponse<T> CreateApiResponse<T>(T? content, HttpStatusCode? code = null)
     {
         code ??= content == null ? HttpStatusCode.NotFound : HttpStatusCode.OK;
 
@@ -14,7 +14,7 @@ public abstract class TestBase
 
         if (code != HttpStatusCode.OK)
         {
-            ex = await ApiException.Create(new HttpRequestMessage(), HttpMethod.Get, resp, new RefitSettings());
+            ex = ApiException.Create(new HttpRequestMessage(), HttpMethod.Get, resp, new RefitSettings()).GetAwaiter().GetResult();
         }
 
         return new ApiResponse<T>(resp, content, new RefitSettings(), ex);

@@ -25,7 +25,6 @@ public static class StartupExtensions
     {
         var loggerConfiguration = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            //.ReadFrom.Configuration(config)
             .Enrich.FromLogContext()
             .WriteTo.Console(theme: AnsiConsoleTheme.Code).
             CreateBootstrapLogger();

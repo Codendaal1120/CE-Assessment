@@ -50,9 +50,9 @@ public class OffersService
             return TryResult.Fail("Could not update product stock, the api returned an empty response");
         }
 
+        // check api response
         if (!result.Content.Success)
-        {
-            // check api response
+        {            
             _logger.LogError($"Could not update the product stock, the api returned an error: {result.Content.Message}");
             return TryResult.Fail($"Api returned an error: {result.Content.Message}");
         }
